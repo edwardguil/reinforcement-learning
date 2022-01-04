@@ -1,0 +1,2 @@
+docker build -t reinforcement-learing:latest .
+docker run --user $(id -u) -e DISPLAY=$DISPLAY --gpus all -it -v ~/Documents/Projects/reinforcement-learning/mounted/:/home/rf -v /tmp/.X11-unix/:/tmp/.X11-unix/ reinforcement-learning:latest

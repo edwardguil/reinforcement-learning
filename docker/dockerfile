@@ -1,0 +1,29 @@
+FROM tensorflow/tensorflow:latest-gpu
+WORKDIR /home
+ENV python_version 3.8
+RUN apt install -y python${python_version}
+RUN update-alternatives --install /usr/local/bin/python python /usr/bin/python${python_version} 1
+RUN python -m pip install --upgrade pip setuptools wheel
+RUN mkdir /root/.mujoco
+RUN mkdir /root/.mujoco/mjpro150
+RUN curl https://roboti.us/file/mjkey.txt -o mjkey.txt
+RUN cp mjkey.txt /root/.mujoco/mjkey.txt
+RUN rm -f mjkey.txt
+RUN apt install swig -y
+# This is for a newer version of mujoco, OpenAI Gym does not run with this yet.
+# RUN curl https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz -o mujoco210.tar.gz
+# RUN tar -xvzf mujoco210.tar.gz -C /root/.mujoco/mujpro150
+# RUN rm -f mujoco210.tar.gz
+RUN curl https://roboti.us/download/mjpro150_linux.zip -o mjpro150.zip
+RUN ls
+RUN unzip mjpro150.zip -d /root/.mujoco/mjpro150
+RUN rm -f mjpro150.zip
+COPY requirements.txt requirements.txt
+RUN python -m pip install -r requirements.txt
+RUN python -m pip install mujoco_py
+RUN apt-get update -y
+RUN apt-get install python-opengl -y
+#RUN  apt-get install dbus-x11 -y
+RUN apt-get install libnvidia-gl-470 -y
+RUN apt-get install vim -y
+LABEL  maintainer="edwardguil96@outlook.com"
